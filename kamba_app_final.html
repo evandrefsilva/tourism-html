@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kamba – Turismo Angola</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0B3D2E;--bg2:#134535;--surface:#FFFFFF;--card:#F5F8F5;--accent:#C8F000;--accent2:#a8d400;
+  --dark:#0B2420;--text:#FFFFFF;--muted:#7AAF92;--muted2:#B8D4C4;--border:rgba(255,255,255,0.10);
+  --warn:#f7cf4d;--r:22px;--font-h:'Syne',sans-serif;--font-b:'DM Sans',sans-serif;
+}
+html,body{height:100%;background:radial-gradient(ellipse at 30% 20%, #1a4a35 0%, #0a2018 100%);display:flex;align-items:center;justify-content:center;font-family:var(--font-b);overflow:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+.phone{position:relative;width:390px;height:844px;background:var(--bg);border-radius:52px;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,0.08),0 40px 100px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.1);z-index:1;}
+.sb{display:flex;justify-content:space-between;align-items:center;padding:14px 28px 0;font-size:13px;font-weight:600;color:#fff;position:relative;z-index:30;}
+.sb-icons{display:flex;gap:5px;align-items:center;}.sb-icons svg{width:15px;height:15px;fill:white;}.notch{width:110px;height:32px;background:#000;border-radius:0 0 18px 18px;position:relative;top:-2px;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .35s ease, transform .35s ease;transform:translateX(30px);}
+.screen.active{opacity:1;pointer-events:all;transform:translateX(0);} .screen.out-left{transform:translateX(-30px);}
+.scroll{flex:1;overflow-y:auto;padding-bottom:90px;}.scroll::-webkit-scrollbar{display:none;}
+.bnav{position:absolute;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:12px 0 28px;z-index:50;}
+.bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--muted);font-size:10px;font-weight:500;transition:color .2s;}
+.bnav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;}.bnav-item.active{color:var(--accent);} .h-title{font-family:var(--font-h);font-weight:800;color:var(--text);} .muted{color:var(--muted2);font-size:12px;}
+.btn-accent{background:var(--accent);color:var(--dark);border:none;border-radius:50px;padding:15px 20px;font-family:var(--font-b);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s,transform .1s;width:100%;}
+.btn-accent:active{transform:scale(.98);background:var(--accent2);} .btn-dark{background:var(--dark);color:#fff;border:none;border-radius:50px;padding:15px 20px;font-size:15px;font-weight:500;cursor:pointer;width:100%;transition:background .2s;}
+.btn-outline{background:transparent;color:#fff;border:1px solid var(--border);border-radius:50px;padding:13px 18px;font-size:14px;font-weight:600;cursor:pointer;width:100%;}
+.input-wrap{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;} .input-wrap label{font-size:12px;color:var(--muted2);font-weight:600;}
+.input{width:100%;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:14px;padding:13px 14px;color:#fff;font-size:14px;outline:none;}
+.input::placeholder{color:var(--muted);} .link{color:var(--accent);font-size:13px;cursor:pointer;font-weight:600;}
+.card{background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:18px;padding:14px;}
+.row{display:flex;align-items:center;gap:10px;} .between{display:flex;justify-content:space-between;align-items:center;}
+.sec-hdr{display:flex;justify-content:space-between;align-items:center;padding:20px 22px 10px;} .sec-hdr h3{font-family:var(--font-h);font-size:17px;font-weight:700;color:#fff;} .see-all{font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;}
+.chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.10);border-radius:50px;padding:7px 14px;color:#fff;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);white-space:nowrap;transition:all .2s;flex-shrink:0;}
+.chip.active,.chip:hover{background:var(--accent);color:var(--dark);border-color:var(--accent);}
+
+/* Splash */
+#s-splash{background:var(--bg);} .splash-hero{position:absolute;top:0;left:0;right:0;height:62%;overflow:hidden;} .splash-hero img{width:100%;height:100%;object-fit:cover;filter:brightness(.6);} .splash-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to top,var(--bg) 30%,transparent);} 
+.splash-logo{position:absolute;top:80px;left:0;right:0;display:flex;flex-direction:column;align-items:center;gap:6px;} .logo-mark{width:60px;height:60px;background:var(--accent);border-radius:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(200,240,0,.35);} .logo-mark svg{width:34px;height:34px;fill:var(--dark);} .brand{font-family:var(--font-h);font-size:30px;font-weight:800;color:#fff;letter-spacing:-0.5px;} .tagline{font-size:13px;color:var(--muted2);} 
+.splash-copy{position:absolute;bottom:220px;left:28px;right:28px;} .splash-copy p{font-family:var(--font-h);font-size:34px;font-weight:800;color:#fff;line-height:1.15;}
+.splash-copy p em{color:var(--accent);font-style:normal;} .splash-actions{position:absolute;bottom:44px;left:24px;right:24px;display:flex;flex-direction:column;gap:12px;} .splash-link{text-align:center;color:var(--muted);font-size:13px;margin-top:4px;}
+
+/* Auth */
+.auth-screen{background:var(--bg);} .auth-head{padding:88px 26px 20px;} .auth-head h2{font-family:var(--font-h);font-size:30px;color:#fff;font-weight:800;} .auth-head p{font-size:13px;color:var(--muted2);margin-top:6px;} .auth-body{padding:0 24px 30px;} .auth-foot{text-align:center;margin-top:12px;color:var(--muted2);font-size:13px;} .auth-otp{display:flex;gap:10px;margin-bottom:18px;} .otp{flex:1;height:52px;text-align:center;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.08);color:#fff;font-size:22px;font-weight:700;}
+
+/* Explore */
+#s-explore{background:var(--bg);} .exp-header{padding:20px 22px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;} .exp-header .greet{font-size:13px;color:var(--muted2);} .exp-header h2{font-family:var(--font-h);font-size:24px;font-weight:800;color:#fff;line-height:1.2;} 
+.avatar{width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid var(--accent);flex-shrink:0;} .avatar img{width:100%;height:100%;object-fit:cover;} .icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--border);background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;cursor:pointer;} .icon-btn svg{width:18px;height:18px;stroke:#fff;fill:none;}
+.search-bar{margin:0 22px 16px;background:rgba(255,255,255,0.08);border:1px solid var(--border);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;color:var(--muted2);font-size:14px;cursor:pointer;} .search-bar svg{width:18px;height:18px;stroke:var(--muted);fill:none;flex-shrink:0;}
+.chips-row{display:flex;gap:8px;padding:0 22px 6px;overflow-x:auto;} .chips-row::-webkit-scrollbar{display:none;}
+.feat-card{position:relative;margin:0 22px;border-radius:22px;overflow:hidden;height:210px;cursor:pointer;box-shadow:0 16px 40px rgba(0,0,0,0.3);transition:transform .2s;} .feat-card:active{transform:scale(.98);} .feat-card img{width:100%;height:100%;object-fit:cover;}
+.feat-card-overlay{position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.75) 40%, transparent);padding:18px;display:flex;flex-direction:column;justify-content:flex-end;}
+.badge{display:inline-flex;align-items:center;gap:5px;background:var(--accent);color:var(--dark);border-radius:50px;padding:4px 10px;font-size:11px;font-weight:700;width:fit-content;margin-bottom:8px;}
+.dest-row,.exp-cards{display:flex;gap:12px;padding:4px 22px;overflow-x:auto;} .dest-row::-webkit-scrollbar,.exp-cards::-webkit-scrollbar{display:none;}
+.dest-card{position:relative;min-width:130px;height:160px;border-radius:18px;overflow:hidden;cursor:pointer;flex-shrink:0;transition:transform .2s;} .dest-card img{width:100%;height:100%;object-fit:cover;} .dest-card::after{content:'';position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.7) 40%, transparent);} .dest-card-info{position:absolute;bottom:12px;left:12px;right:12px;z-index:1;} .dest-card-info h4{font-family:var(--font-h);font-size:15px;font-weight:700;color:#fff;} .dest-card-info p{font-size:11px;color:rgba(255,255,255,.65);} 
+.exp-mini{min-width:150px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:16px;overflow:hidden;flex-shrink:0;cursor:pointer;} .exp-mini img{width:100%;height:90px;object-fit:cover;} .exp-mini-body{padding:10px 12px;} .exp-mini-body h5{font-size:13px;font-weight:600;color:#fff;margin-bottom:2px;} .exp-mini-body p{font-size:11px;color:var(--muted2);}
+
+/* Search results */
+#s-search{background:var(--bg);} .search-top{padding:84px 22px 14px;} .results-list{padding:8px 22px 100px;overflow-y:auto;} .result-card{display:flex;gap:12px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:16px;padding:10px;margin-bottom:10px;cursor:pointer;} .result-card img{width:110px;height:90px;border-radius:12px;object-fit:cover;} .result-card h4{font-family:var(--font-h);font-size:16px;color:#fff;} .result-card p{font-size:12px;color:var(--muted2);margin-top:2px;}
+
+/* Detail */
+#s-detail{background:var(--bg);} .detail-hero{position:relative;height:320px;flex-shrink:0;} .detail-hero img{width:100%;height:100%;object-fit:cover;} .detail-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,var(--bg),transparent);} .detail-back,.detail-fav{position:absolute;top:60px;z-index:10;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;cursor:pointer;} .detail-back{left:20px;} .detail-fav{right:20px;} .detail-back svg,.detail-fav svg{width:20px;height:20px;stroke:#fff;fill:none;}
+.detail-body{flex:1;overflow-y:auto;padding:0 22px 100px;} .detail-title-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;} .detail-title-row h2{font-family:var(--font-h);font-size:28px;font-weight:800;color:#fff;flex:1;} .detail-rating{text-align:right;} .rating-num{font-family:var(--font-h);font-size:24px;font-weight:800;color:var(--accent);} .rating-stars{font-size:11px;color:var(--muted2);} .detail-loc{display:flex;align-items:center;gap:5px;color:var(--muted2);font-size:13px;margin-bottom:16px;} .detail-loc svg{width:14px;height:14px;stroke:var(--accent);fill:none;}
+.detail-stats{display:flex;gap:10px;margin-bottom:20px;} .stat-pill{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:14px;padding:12px 8px;text-align:center;} .stat-pill .sv{font-family:var(--font-h);font-size:16px;font-weight:700;color:#fff;} .stat-pill .sl{font-size:10px;color:var(--muted2);margin-top:2px;}
+.detail-desc{font-size:14px;color:var(--muted2);line-height:1.65;margin-bottom:20px;} .gallery-row{display:flex;gap:10px;margin-bottom:24px;overflow-x:auto;} .gallery-thumb{width:90px;height:70px;border-radius:12px;overflow:hidden;flex-shrink:0;} .gallery-thumb img{width:100%;height:100%;object-fit:cover;}
+.detail-cta{display:flex;gap:10px;} .btn-book{flex:1;background:var(--accent);color:var(--dark);border:none;border-radius:50px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;} .btn-save{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;} .btn-save svg{width:22px;height:22px;stroke:#fff;fill:none;}
+
+/* Booking & payment */
+#s-booking,#s-payment,#s-confirmation,#s-review,#s-notifications{background:var(--bg);} .form-top{padding:82px 22px 8px;display:flex;align-items:center;gap:12px;} .form-top h2{font-family:var(--font-h);font-size:22px;color:#fff;} .back-icon{width:36px;height:36px;background:rgba(255,255,255,.08);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;} .back-icon svg{width:20px;height:20px;stroke:#fff;fill:none;}
+.booking-scroll,.payment-scroll,.notif-scroll,.review-scroll{flex:1;overflow-y:auto;padding:10px 22px 110px;} .stepper{display:flex;align-items:center;gap:10px;} .step-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.06);color:#fff;cursor:pointer;} .step-value{min-width:26px;text-align:center;color:#fff;font-weight:700;}
+.package-grid{display:flex;flex-direction:column;gap:10px;margin-top:10px;} .pkg{border:1px solid var(--border);border-radius:14px;padding:12px;cursor:pointer;background:rgba(255,255,255,.04);} .pkg.active{border-color:var(--accent);background:rgba(200,240,0,.13);} .pkg h4{color:#fff;font-size:15px;} .pkg p{font-size:12px;color:var(--muted2);margin-top:2px;}
+.booking-footer{position:absolute;left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--border);padding:12px 22px 28px;} .total-row{display:flex;justify-content:space-between;color:#fff;margin-bottom:10px;} .total-row small{color:var(--muted2);} 
+.pay-method{border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:10px;cursor:pointer;background:rgba(255,255,255,.05);} .pay-method.active{border-color:var(--accent);} .pay-form{display:none;margin-top:10px;} .pay-method.active .pay-form{display:block;}
+.success-icon{width:78px;height:78px;border-radius:50%;background:rgba(200,240,0,.14);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;margin:20px auto 14px;} .success-icon svg{width:42px;height:42px;stroke:var(--accent);fill:none;}
+.conf-body{padding:16px 22px 110px;text-align:center;} .conf-body h2{font-family:var(--font-h);font-size:28px;color:#fff;} .ref{margin-top:8px;color:var(--muted2);font-size:13px;}
+
+/* Trips, pass, profile */
+#s-trips,#s-pass,#s-profile{background:var(--bg);} .trips-header{padding:20px 22px 16px;} .trips-header h2{font-family:var(--font-h);font-size:24px;font-weight:800;color:#fff;} .trips-header p{font-size:13px;color:var(--muted2);margin-top:3px;}
+.trip-big{margin:0 22px 14px;border-radius:20px;overflow:hidden;background:rgba(255,255,255,0.05);border:1px solid var(--border);} .trip-big-img{height:140px;overflow:hidden;position:relative;} .trip-big-img img{width:100%;height:100%;object-fit:cover;} .status-badge{position:absolute;top:12px;right:12px;background:var(--accent);color:var(--dark);border-radius:50px;padding:4px 12px;font-size:11px;font-weight:700;} .trip-big-body{padding:14px 16px;} .trip-big-body h3{font-family:var(--font-h);font-size:17px;font-weight:700;color:#fff;margin-bottom:6px;}
+.trip-meta-row{display:flex;gap:14px;flex-wrap:wrap;} .trip-meta-row span{font-size:11px;color:var(--muted2);} .trip-action{margin-top:10px;display:inline-block;background:rgba(255,255,255,.08);border:1px solid var(--border);border-radius:10px;padding:8px 12px;color:#fff;font-size:12px;cursor:pointer;}
+.pass-appbar{display:flex;align-items:center;padding:20px 22px 10px;gap:14px;} .pass-appbar h2{font-family:var(--font-h);font-size:18px;font-weight:700;color:#fff;} .pass-scroll{flex:1;overflow-y:auto;padding:0 18px 20px;} .pass-card{background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3);} .pass-top{background:var(--bg);padding:20px 22px;display:flex;justify-content:space-between;} .al-name{font-family:var(--font-h);font-size:14px;font-weight:700;color:#fff;} .al-num{font-size:11px;color:var(--muted);} .pass-route-sec{padding:20px 22px 16px;background:#fff;display:flex;align-items:center;gap:10px;} .p-iata{font-family:var(--font-h);font-size:38px;font-weight:800;color:#0B2420;} .p-city,.p-time{font-size:11px;color:#555;} .pass-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px 22px;background:#fff;} .pg-l{font-size:10px;color:#999;} .pg-v{font-family:var(--font-h);font-size:14px;font-weight:700;color:#0B2420;}
+.profile-hero{position:relative;height:200px;overflow:hidden;flex-shrink:0;} .profile-hero img{width:100%;height:100%;object-fit:cover;filter:brightness(.5);} .profile-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to top,var(--bg),transparent);} .profile-info{position:relative;z-index:2;margin-top:-60px;padding:0 22px;display:flex;align-items:flex-end;gap:14px;margin-bottom:20px;} .profile-avatar{width:80px;height:80px;border-radius:24px;overflow:hidden;border:3px solid var(--bg);} .profile-avatar img{width:100%;height:100%;object-fit:cover;} .profile-name h3{font-family:var(--font-h);font-size:20px;font-weight:800;color:#fff;} .profile-name p{font-size:12px;color:var(--muted2);} .profile-menu{margin:0 22px;} .menu-item{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);cursor:pointer;} .menu-icon{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;} .menu-icon svg{width:18px;height:18px;stroke:var(--accent);fill:none;} .menu-label{flex:1;color:#fff;font-size:14px;font-weight:500;}
+.logout-confirm{display:none;margin:12px 0;background:rgba(255,255,255,.08);border:1px solid var(--border);padding:12px;border-radius:12px;} .logout-confirm.active{display:block;}
+
+/* Review */
+.star-row{display:flex;gap:8px;margin:8px 0 12px;} .star{width:28px;height:28px;cursor:pointer;fill:none;stroke:var(--muted2);} .star.active{fill:var(--accent);stroke:var(--accent);} .photo-ph{margin-top:10px;height:120px;border:1px dashed var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;color:var(--muted2);font-size:13px;}
+
+/* Notifications */
+.n-item{display:flex;gap:10px;padding:12px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.05);margin-bottom:10px;} .n-dot{width:10px;height:10px;border-radius:50%;margin-top:6px;background:transparent;border:1px solid var(--muted);} .n-dot.unread{background:#2dcf73;border-color:#2dcf73;} .n-dot.action{background:var(--warn);border-color:var(--warn);} .n-item h4{font-size:14px;color:#fff;} .n-item p{font-size:12px;color:var(--muted2);margin-top:3px;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.screen.active > *{animation:fadeUp .4s ease both;} .screen.active > *:nth-child(2){animation-delay:.06s;} .screen.active > *:nth-child(3){animation-delay:.10s;} .screen.active > *:nth-child(4){animation-delay:.14s;} .screen.active > *:nth-child(5){animation-delay:.18s;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="sb" id="status-bar"><span>9:41</span><div class="notch"></div><div class="sb-icons"><svg viewBox="0 0 24 24"><rect x="2" y="14" width="3" height="8" rx="1"/><rect x="8" y="10" width="3" height="12" rx="1"/><rect x="14" y="6" width="3" height="16" rx="1"/><rect x="20" y="2" width="3" height="20" rx="1"/></svg><svg viewBox="0 0 24 24"><path d="M1 6s4.5-4 11-4 11 4 11 4"/><path d="M5 10s3-2.5 7-2.5 7 2.5 7 2.5"/><circle cx="12" cy="15" r="2"/></svg><svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v3"/></svg></div></div>
+
+  <!-- Flutter: Tela de splash e onboarding -->
+  <div class="screen active" id="s-splash">
+    <div class="splash-hero"><img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&q=85" alt="Angola"/></div>
+    <div class="splash-logo"><div class="logo-mark"><svg viewBox="0 0 34 34"><path d="M17 2L20.5 12.5H31L22.5 19L26 29.5L17 23L8 29.5L11.5 19L3 12.5H13.5L17 2Z"/></svg></div><div class="brand">Kamba</div><div class="tagline">Descobre Angola consigo</div></div>
+    <div class="splash-copy"><p>Explora as<br>maravilhas de<br><em>Angola</em></p></div>
+    <div class="splash-actions">
+      <button class="btn-accent" onclick="goTo('s-login')">Começar a Explorar</button>
+      <button class="btn-dark" onclick="goTo('s-login')">Já tenho conta</button>
+      <p class="splash-link">Não tens conta? <span class="link" onclick="goTo('s-register')">Regista-te</span></p>
+    </div>
+  </div>
+
+  <!-- Flutter: Tela de autenticação -->
+  <div class="screen auth-screen" id="s-login">
+    <div class="auth-head"><h2>Entrar</h2><p>Aceda à sua conta para continuar.</p></div>
+    <div class="auth-body scroll">
+      <div class="input-wrap"><label>Email</label><input class="input" type="email" placeholder="nome@empresa.ao"/></div>
+      <div class="input-wrap"><label>Palavra-passe</label><input class="input" type="password" placeholder="Introduza a sua palavra-passe"/></div>
+      <p style="text-align:right;margin-bottom:14px;"><span class="link" onclick="goTo('s-forgot')">Recuperar palavra-passe</span></p>
+      <button class="btn-accent" onclick="goTo('s-explore')">Entrar</button>
+      <div class="auth-foot">Não tem conta? <span class="link" onclick="goTo('s-register')">Criar conta</span></div>
+    </div>
+  </div>
+
+  <!-- Flutter: Tela de registo -->
+  <div class="screen auth-screen" id="s-register">
+    <div class="auth-head"><h2>Criar Conta</h2><p>Preencha os dados para concluir o registo.</p></div>
+    <div class="auth-body scroll">
+      <div class="input-wrap"><label>Nome completo</label><input class="input" placeholder="Introduza o nome completo"/></div>
+      <div class="input-wrap"><label>Email</label><input class="input" placeholder="nome@empresa.ao"/></div>
+      <div class="input-wrap"><label>Telefone</label><input class="input" placeholder="+244 923 000 000"/></div>
+      <div class="input-wrap"><label>Palavra-passe</label><input class="input" type="password" placeholder="Crie uma palavra-passe"/></div>
+      <div class="input-wrap"><label>Confirmar palavra-passe</label><input class="input" type="password" placeholder="Repita a palavra-passe"/></div>
+      <label style="display:flex;gap:8px;font-size:12px;color:var(--muted2);margin-bottom:14px;"><input type="checkbox"/> Aceito os termos e condições</label>
+      <button class="btn-accent" onclick="goTo('s-explore')">Criar Conta</button>
+      <div class="auth-foot">Já tenho conta? <span class="link" onclick="goTo('s-login')">Entrar</span></div>
+    </div>
+  </div>
+
+  <!-- Flutter: Recuperação de palavra-passe -->
+  <div class="screen auth-screen" id="s-forgot">
+    <div class="auth-head"><h2>Recuperar Acesso</h2><p>Introduza o email para receber o código.</p></div>
+    <div class="auth-body">
+      <div class="input-wrap"><label>Email</label><input class="input" placeholder="nome@empresa.ao"/></div>
+      <button class="btn-accent" onclick="goTo('s-otp')">Enviar código</button>
+      <p class="auth-foot"><span class="link" onclick="goTo('s-login')">Voltar ao login</span></p>
+    </div>
+  </div>
+
+  <!-- Flutter: Verificação OTP -->
+  <div class="screen auth-screen" id="s-otp">
+    <div class="auth-head"><h2>Verificação</h2><p>Introduza o código de 4 dígitos enviado para o seu email.</p></div>
+    <div class="auth-body">
+      <div class="auth-otp"><input class="otp" maxlength="1"/><input class="otp" maxlength="1"/><input class="otp" maxlength="1"/><input class="otp" maxlength="1"/></div>
+      <button class="btn-accent" onclick="goTo('s-explore')">Verificar</button>
+      <p class="auth-foot"><span class="link">Reenviar código</span></p>
+    </div>
+  </div>
+
+  <!-- Flutter: Tela principal de descoberta -->
+  <div class="screen" id="s-explore">
+    <div class="exp-header"><div><div class="greet">Bom dia, Evandre</div><h2>Para onde<br>vai hoje?</h2></div><div class="row"><button class="icon-btn" onclick="goTo('s-notifications')"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button><div class="avatar"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&q=80" alt="avatar"/></div></div></div>
+    <div class="search-bar" onclick="goTo('s-search')"><svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Pesquisa destino, hotel...</div>
+    <div class="chips-row"><div class="chip active">Tudo</div><div class="chip">Praias</div><div class="chip">Natureza</div><div class="chip">Cidades</div><div class="chip">Cultura</div></div>
+    <div class="scroll">
+      <div class="sec-hdr"><h3>Destaque</h3><span class="see-all">Ver tudo</span></div>
+      <div class="feat-card" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=800&q=85" alt="Cabo Ledo"/><div class="feat-card-overlay"><div class="badge">Top Escolha</div><h3 class="h-title" style="font-size:22px;">Cabo Ledo</h3><p>Bengo · 65 km de Luanda</p></div></div>
+      <div class="sec-hdr"><h3>Destinos Populares</h3><span class="see-all">Ver tudo</span></div>
+      <div class="dest-row">
+        <div class="dest-card" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1580974928064-f0aeef70895a?w=600&q=85" alt="Luanda"/><div class="dest-card-info"><h4>Luanda</h4><p>Capital · 42 lugares</p></div></div>
+        <div class="dest-card" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=600&q=85" alt="Namibe"/><div class="dest-card-info"><h4>Namibe</h4><p>Deserto · 18 lugares</p></div></div>
+        <div class="dest-card" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=85" alt="Huíla"/><div class="dest-card-info"><h4>Huíla</h4><p>Serra · 25 lugares</p></div></div>
+      </div>
+      <div class="sec-hdr"><h3>Experiências</h3><span class="see-all">Ver tudo</span></div>
+      <div class="exp-cards"><div class="exp-mini" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=85" alt="Safari"/><div class="exp-mini-body"><h5>Safari Quiçama</h5><p>2 dias · Desde 45.000 Kz</p></div></div><div class="exp-mini" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=85" alt="Praia"/><div class="exp-mini-body"><h5>Praias do Sul</h5><p>3 dias · Desde 38.000 Kz</p></div></div></div>
+    </div>
+    <div class="bnav"><div class="bnav-item active" onclick="goTo('s-explore')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Explorar</div><div class="bnav-item" onclick="goTo('s-detail')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Guardados</div><div class="bnav-item" onclick="goTo('s-trips')"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>Viagens</div><div class="bnav-item" onclick="goTo('s-profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div></div>
+  </div>
+
+  <!-- Flutter: Tela de pesquisa com filtros -->
+  <div class="screen" id="s-search">
+    <div class="search-top">
+      <button class="back-icon" onclick="goBack()"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="search-bar" style="margin:10px 0 12px;"><svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Cabo Ledo, Namibe, Kalandula...</div>
+      <div class="chips-row" style="padding:0;"><div class="chip active">Tudo</div><div class="chip">Praias</div><div class="chip">Natureza</div><div class="chip">Cidades</div><div class="chip">Cultura</div><div class="chip">Safari</div></div>
+    </div>
+    <div class="results-list">
+      <div class="result-card" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=85" alt="Cabo Ledo"/><div><h4>Cabo Ledo</h4><p>Bengo · 65 km de Luanda</p><p>Desde 45.000 Kz · 4.9</p></div></div>
+      <div class="result-card" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=600&q=85" alt="Namibe"/><div><h4>Deserto do Namibe</h4><p>Namibe · 650 km de Luanda</p><p>Desde 120.000 Kz · 4.8</p></div></div>
+      <div class="result-card" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=600&q=85" alt="Kalandula"/><div><h4>Cataratas de Kalandula</h4><p>Malanje · 410 km de Luanda</p><p>Desde 95.000 Kz · 4.7</p></div></div>
+      <div class="result-card" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1580974928064-f0aeef70895a?w=600&q=85" alt="Mussulo"/><div><h4>Ilha do Mussulo</h4><p>Luanda · 15 km de Luanda</p><p>Desde 12.000 Kz · 4.6</p></div></div>
+      <div class="result-card" onclick="goTo('s-detail')"><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=85" alt="Leba"/><div><h4>Serra da Leba</h4><p>Huíla · 850 km de Luanda</p><p>Desde 85.000 Kz · 4.8</p></div></div>
+    </div>
+  </div>
+
+  <!-- Flutter: Tela de detalhe do destino -->
+  <div class="screen" id="s-detail">
+    <div class="detail-hero"><img src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=800&q=85" alt="Cabo Ledo"/><button class="detail-back" onclick="goBack()"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button><div class="detail-fav"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
+    <div class="detail-body">
+      <div class="detail-title-row"><h2>Cabo Ledo</h2><div class="detail-rating"><div class="rating-num">4.9</div><div class="rating-stars">5.0</div></div></div>
+      <div class="detail-loc"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>Bengo, Angola · 65 km de Luanda</div>
+      <div class="detail-stats"><div class="stat-pill"><div class="sv">3D</div><div class="sl">Duração</div></div><div class="stat-pill"><div class="sv">28°C</div><div class="sl">Temperatura</div></div><div class="stat-pill"><div class="sv">AOA</div><div class="sl">Moeda</div></div><div class="stat-pill"><div class="sv">PT</div><div class="sl">Idioma</div></div></div>
+      <p class="detail-desc">Cabo Ledo é uma das praias mais reconhecidas de Angola, com dunas e costa ampla. O destino combina surf, pesca e descanso com oferta turística crescente.</p>
+      <div class="gallery-row"><div class="gallery-thumb"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=85" alt=""/></div><div class="gallery-thumb"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=85" alt=""/></div><div class="gallery-thumb"><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=85" alt=""/></div></div>
+      <div class="detail-cta"><button class="btn-book" onclick="goTo('s-booking')">Reservar Agora</button><div class="btn-save"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div></div>
+    </div>
+    <div class="bnav"><div class="bnav-item" onclick="goTo('s-explore')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Explorar</div><div class="bnav-item active"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Guardados</div><div class="bnav-item" onclick="goTo('s-trips')"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>Viagens</div><div class="bnav-item" onclick="goTo('s-profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div></div>
+  </div>
+
+  <!-- Flutter: Formulário de reserva -->
+  <div class="screen" id="s-booking">
+    <div class="form-top"><button class="back-icon" onclick="goBack()"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button><h2>Reserva</h2></div>
+    <div class="booking-scroll">
+      <div class="card" style="margin-bottom:12px;"><h3 class="h-title" style="font-size:17px;">Detalhes da viagem</h3><div class="input-wrap" style="margin-top:10px;"><label>Destino</label><input class="input" value="Cabo Ledo" readonly/></div><div class="input-wrap"><label>Data de chegada</label><input class="input" placeholder="20/05/2026"/></div><div class="input-wrap"><label>Data de partida</label><input class="input" placeholder="23/05/2026"/></div><div class="between"><span class="muted">Adultos</span><div class="stepper"><button class="step-btn" onclick="step('adults',-1,1)">−</button><span id="adults" class="step-value">1</span><button class="step-btn" onclick="step('adults',1,9)">+</button></div></div><div class="between" style="margin-top:8px;"><span class="muted">Crianças</span><div class="stepper"><button class="step-btn" onclick="step('children',-1,0)">−</button><span id="children" class="step-value">0</span><button class="step-btn" onclick="step('children',1,6)">+</button></div></div></div>
+      <div class="card"><h3 class="h-title" style="font-size:17px;">Alojamento</h3><div class="package-grid"><div class="pkg active" data-price="45000" onclick="selectPackage(this)"><h4>Básico — 45.000 Kz</h4><p>Transporte incluído</p></div><div class="pkg" data-price="85000" onclick="selectPackage(this)"><h4>Standard — 85.000 Kz</h4><p>Transporte + hotel 3 estrelas</p></div><div class="pkg" data-price="145000" onclick="selectPackage(this)"><h4>Premium — 145.000 Kz</h4><p>Transporte + hotel 5 estrelas + guia</p></div></div></div>
+    </div>
+    <div class="booking-footer"><div class="total-row"><div><small>Total estimado</small><div id="booking-total" style="font-weight:800;">45.000 Kz</div></div></div><button class="btn-accent" onclick="goTo('s-payment')">Continuar para Pagamento</button></div>
+  </div>
+
+  <!-- Flutter: Pagamento multimétodo -->
+  <div class="screen" id="s-payment">
+    <div class="form-top"><button class="back-icon" onclick="goBack()"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button><h2>Pagamento</h2></div>
+    <div class="payment-scroll">
+      <div class="card" style="margin-bottom:12px;"><h3 class="h-title" style="font-size:17px;">Resumo da reserva</h3><p class="muted" style="margin-top:8px;">Destino: Cabo Ledo</p><p class="muted">Datas: 20/05/2026 - 23/05/2026</p><p class="muted">Pacote: Básico</p><p style="color:#fff;font-weight:700;margin-top:4px;">Total: 45.000 Kz</p></div>
+      <div class="pay-method active" onclick="selectPayment(this)"><div class="between"><h4 style="color:#fff;">Multicaixa Express</h4><span class="muted">Activo</span></div><div class="pay-form"><input class="input" placeholder="+244 923 000 000"/></div></div>
+      <div class="pay-method" onclick="selectPayment(this)"><div class="between"><h4 style="color:#fff;">Transferência Bancária</h4><span class="muted">IBAN</span></div><div class="pay-form"><input class="input" placeholder="AO06 0040 0000 0000 1234 5"/></div></div>
+      <div class="pay-method" onclick="selectPayment(this)"><div class="between"><h4 style="color:#fff;">Cartão de Crédito/Débito</h4><span class="muted">Cartão</span></div><div class="pay-form"><input class="input" placeholder="Número do cartão" style="margin-bottom:8px;"/><div class="row"><input class="input" placeholder="Validade"/><input class="input" placeholder="CVV"/></div></div></div>
+      <button class="btn-accent" style="margin-top:10px;" onclick="goTo('s-confirmation')">Confirmar Pagamento</button>
+    </div>
+  </div>
+
+  <!-- Flutter: Confirmação de reserva -->
+  <div class="screen" id="s-confirmation">
+    <div class="form-top"><button class="back-icon" onclick="goTo('s-explore')"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button><h2>Confirmação</h2></div>
+    <div class="conf-body scroll">
+      <div class="success-icon"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <h2>Reserva Confirmada</h2>
+      <p class="ref">Referência: KMB-2026-04891</p>
+      <div class="card" style="text-align:left;margin-top:14px;"><p class="muted">Destino: Cabo Ledo</p><p class="muted">Datas: 20/05/2026 - 23/05/2026</p><p class="muted">Passageiros: 1 Adulto</p><p class="muted">Método: Multicaixa Express</p><p style="color:#fff;font-weight:700;margin-top:4px;">Total pago: 45.000 Kz</p></div>
+      <button class="btn-accent" style="margin-top:14px;" onclick="goTo('s-pass')">Ver Cartão de Embarque</button>
+      <button class="btn-outline" style="margin-top:8px;" onclick="goTo('s-explore')">Voltar ao Início</button>
+    </div>
+  </div>
+
+  <!-- Flutter: Tela de viagens -->
+  <div class="screen" id="s-trips">
+    <div class="trips-header"><h2>Minhas Viagens</h2><p>Próximas e passadas</p></div>
+    <div class="scroll">
+      <div class="sec-hdr" style="padding-top:4px"><h3>Próxima Viagem</h3></div>
+      <div class="trip-big" onclick="goTo('s-pass')"><div class="trip-big-img"><img src="https://images.unsplash.com/photo-1580974928064-f0aeef70895a?w=600&q=85" alt="Luanda"/><div class="status-badge">Confirmado</div></div><div class="trip-big-body"><h3>Luanda → Lubango</h3><div class="trip-meta-row"><span>15/05/2026</span><span>1 Adulto · Assento 4A</span><span>10 kg</span></div></div></div>
+      <div class="sec-hdr"><h3>Histórico</h3><span class="see-all">Ver tudo</span></div>
+      <div class="trip-big" style="opacity:.8;"><div class="trip-big-img"><img src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=600&q=85" alt="Benguela"/><div class="status-badge" style="background:var(--muted);color:#fff">Concluído</div></div><div class="trip-big-body"><h3>Luanda → Benguela</h3><div class="trip-meta-row"><span>12/11/2025</span></div><span class="trip-action" onclick="goTo('s-review')">Avaliar</span></div></div>
+    </div>
+    <div class="bnav"><div class="bnav-item" onclick="goTo('s-explore')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Explorar</div><div class="bnav-item" onclick="goTo('s-detail')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Guardados</div><div class="bnav-item active"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>Viagens</div><div class="bnav-item" onclick="goTo('s-profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div></div>
+  </div>
+
+  <!-- Flutter: Cartão de embarque -->
+  <div class="screen" id="s-pass">
+    <div class="pass-appbar"><button class="back-icon" onclick="goBack()"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button><h2>Cartão de Embarque</h2></div>
+    <div class="pass-scroll"><div class="pass-card"><div class="pass-top"><div><div class="al-name">TAAG Angola Airlines</div><div class="al-num">Bilhete: 2888100</div></div><div style="text-align:right;"><div class="al-num">Estado</div><div style="font-size:13px;font-weight:700;color:var(--accent);">Confirmado</div></div></div><div class="pass-route-sec"><div><div class="p-iata">LAD</div><div class="p-city">Luanda, AO</div><div class="p-time">07:30</div></div><div style="flex:1;height:1px;background:#ddd;"></div><div style="text-align:right"><div class="p-iata">SDD</div><div class="p-city">Lubango, AO</div><div class="p-time">09:10</div></div></div><div class="pass-grid"><div><div class="pg-l">Nome</div><div class="pg-v">Evandre</div></div><div style="text-align:right"><div class="pg-l">Nº Bilhete</div><div class="pg-v">AO1231</div></div><div><div class="pg-l">Passageiros</div><div class="pg-v">1 Adulto</div></div><div style="text-align:right"><div class="pg-l">Assento</div><div class="pg-v">4A</div></div><div><div class="pg-l">Classe</div><div class="pg-v">Económica</div></div><div style="text-align:right"><div class="pg-l">Bagagem</div><div class="pg-v">10 kg</div></div></div></div></div>
+    <div class="pass-actions" style="padding:16px 18px 36px;display:flex;gap:10px;"><button class="btn-accent">Descarregar</button><button class="btn-dark">Partilhar</button></div>
+  </div>
+
+  <!-- Flutter: Tela de avaliação -->
+  <div class="screen" id="s-review">
+    <div class="form-top"><button class="back-icon" onclick="goBack()"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button><h2>Avaliar Viagem</h2></div>
+    <div class="review-scroll">
+      <div class="input-wrap"><label>Destino</label><input class="input" value="Benguela" readonly/></div>
+      <label style="font-size:12px;color:var(--muted2);">Classificação</label>
+      <div class="star-row"><svg class="star" data-star="1" onclick="setRating(1)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" data-star="2" onclick="setRating(2)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" data-star="3" onclick="setRating(3)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" data-star="4" onclick="setRating(4)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg class="star" data-star="5" onclick="setRating(5)" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <div class="input-wrap"><label>Comentário</label><textarea class="input" style="height:120px;resize:none;" placeholder="Descreva a sua experiência"></textarea></div>
+      <button class="btn-outline" onclick="document.getElementById('photo-placeholder').textContent='Foto selecionada (simulação)'">Carregar Foto</button>
+      <div class="photo-ph" id="photo-placeholder">Nenhuma foto selecionada</div>
+      <button class="btn-accent" style="margin-top:12px;" onclick="goTo('s-trips')">Publicar Avaliação</button>
+    </div>
+  </div>
+
+  <!-- Flutter: Centro de notificações -->
+  <div class="screen" id="s-notifications">
+    <div class="form-top"><button class="back-icon" onclick="goBack()"><svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button><h2>Notificações</h2></div>
+    <div class="notif-scroll">
+      <div class="n-item"><span class="n-dot unread"></span><div><h4>Confirmação de reserva</h4><p>A sua reserva KMB-2026-04891 foi confirmada com sucesso.</p></div></div>
+      <div class="n-item"><span class="n-dot action"></span><div><h4>Lembrete de viagem</h4><p>Faltam 48 horas para o voo Luanda - Lubango.</p></div></div>
+      <div class="n-item"><span class="n-dot"></span><div><h4>Promoção de destino</h4><p>Pacotes para o Namibe com redução de 15% esta semana.</p></div></div>
+      <div class="n-item"><span class="n-dot action"></span><div><h4>Avaliação pendente</h4><p>A sua viagem para Benguela foi concluída. Avalie a experiência.</p></div></div>
+    </div>
+  </div>
+
+  <!-- Flutter: Tela de perfil do utilizador -->
+  <div class="screen" id="s-profile">
+    <div class="profile-hero"><img src="https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=800&q=85" alt="Angola"/></div>
+    <div class="profile-info"><div class="profile-avatar"><img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&q=85" alt="avatar"/></div><div class="profile-name"><h3>Evandre T.</h3><p>Membro desde 2024, Luanda AO</p></div></div>
+    <div class="scroll" style="padding-bottom:100px"><div class="profile-menu"><div class="menu-item"><div class="menu-icon"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="menu-label">Editar Perfil</div></div><div class="menu-item" onclick="goTo('s-trips')"><div class="menu-icon"><svg viewBox="0 0 24 24" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/></svg></div><div class="menu-label">Minhas Viagens</div></div><div class="menu-item" onclick="toggleLogoutConfirm()"><div class="menu-icon"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div><div class="menu-label" style="color:#ff6b6b">Terminar Sessão</div></div><div class="logout-confirm" id="logout-confirm"><p style="font-size:12px;color:var(--muted2);margin-bottom:10px;">Confirma que pretende terminar sessão?</p><div class="row"><button class="btn-outline" onclick="toggleLogoutConfirm()">Cancelar</button><button class="btn-accent" onclick="goTo('s-splash')">Confirmar</button></div></div></div></div>
+    <div class="bnav"><div class="bnav-item" onclick="goTo('s-explore')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Explorar</div><div class="bnav-item" onclick="goTo('s-detail')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Guardados</div><div class="bnav-item" onclick="goTo('s-trips')"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>Viagens</div><div class="bnav-item active"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Perfil</div></div>
+  </div>
+</div>
+
+<script>
+const history=['s-splash'];
+let current='s-splash';
+function goTo(id){
+  if(id===current)return;
+  const prev=document.getElementById(current);
+  const next=document.getElementById(id);
+  prev.classList.remove('active');
+  prev.classList.add('out-left');
+  setTimeout(()=>prev.classList.remove('out-left'),350);
+  next.classList.add('active');
+  history.push(id);
+  current=id;
+  document.getElementById('status-bar').style.opacity=(id==='s-pass')?'0':'1';
+}
+function goBack(){
+  if(history.length>1){
+    history.pop();
+    const prev=history[history.length-1];
+    const curr=document.getElementById(current);
+    const target=document.getElementById(prev);
+    curr.classList.remove('active');
+    target.classList.add('active');
+    current=prev;
+    document.getElementById('status-bar').style.opacity=(prev==='s-pass')?'0':'1';
+  }
+}
+function step(id,delta,min){
+  const el=document.getElementById(id);
+  let v=parseInt(el.textContent,10)+delta;
+  if(v<min)v=min;
+  el.textContent=v;
+}
+function selectPackage(el){
+  document.querySelectorAll('.pkg').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  const price=Number(el.dataset.price||0);
+  document.getElementById('booking-total').textContent=price.toLocaleString('pt-PT')+' Kz';
+}
+function selectPayment(el){
+  document.querySelectorAll('.pay-method').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+function setRating(value){
+  document.querySelectorAll('.star').forEach(s=>{
+    const n=Number(s.dataset.star);
+    s.classList.toggle('active',n<=value);
+  });
+}
+function toggleLogoutConfirm(){
+  document.getElementById('logout-confirm').classList.toggle('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kamba – Turismo Angola</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
+<style>
+/* ─── RESET & ROOT ─────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0B3D2E;
+  --bg2:#134535;
+  --surface:#FFFFFF;
+  --card:#F5F8F5;
+  --accent:#C8F000;
+  --accent2:#a8d400;
+  --dark:#0B2420;
+  --text:#FFFFFF;
+  --muted:#7AAF92;
+  --muted2:#B8D4C4;
+  --border:rgba(255,255,255,0.10);
+  --r:22px;
+  --font-h:'Syne',sans-serif;
+  --font-b:'DM Sans',sans-serif;
+}
+
+/* ─── OUTER SHELL ───────────────────────────────────────── */
+html,body{
+  height:100%;
+  background:radial-gradient(ellipse at 30% 20%, #1a4a35 0%, #0a2018 100%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-b);
+  overflow:hidden;
+}
+
+/* subtle grain */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+/* ─── PHONE FRAME ────────────────────────────────────────── */
+.phone{
+  position:relative;
+  width:390px;
+  height:844px;
+  background:var(--bg);
+  border-radius:52px;
+  overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 40px 100px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  z-index:1;
+}
+
+/* ─── STATUS BAR ─────────────────────────────────────────── */
+.sb{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 28px 0;
+  font-size:13px;font-weight:600;color:#fff;
+  position:relative;z-index:10;
+}
+.sb-icons{display:flex;gap:5px;align-items:center;}
+.sb-icons svg{width:15px;height:15px;fill:white;}
+.notch{
+  width:110px;height:32px;
+  background:#000;border-radius:0 0 18px 18px;
+  position:relative;top:-2px;
+}
+
+/* ─── SCREENS ─────────────────────────────────────────────── */
+.screen{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transition:opacity .35s ease, transform .35s ease;
+  transform:translateX(30px);
+}
+.screen.active{
+  opacity:1;pointer-events:all;
+  transform:translateX(0);
+}
+.screen.out-left{transform:translateX(-30px);}
+
+/* ─── BOTTOM NAV ──────────────────────────────────────────── */
+.bnav{
+  position:absolute;bottom:0;left:0;right:0;
+  background:var(--bg);
+  border-top:1px solid var(--border);
+  display:flex;justify-content:space-around;
+  padding:12px 0 28px;
+  z-index:50;
+}
+.bnav-item{
+  display:flex;flex-direction:column;align-items:center;
+  gap:3px;cursor:pointer;
+  color:var(--muted);font-size:10px;font-weight:500;
+  transition:color .2s;
+}
+.bnav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;}
+.bnav-item.active{color:var(--accent);}
+
+/* ─── SCROLLABLE AREA ─────────────────────────────────────── */
+.scroll{
+  flex:1;overflow-y:auto;padding-bottom:90px;
+}
+.scroll::-webkit-scrollbar{display:none;}
+
+/* ─── TYPOGRAPHY HELPERS ──────────────────────────────────── */
+.h-title{font-family:var(--font-h);font-weight:800;color:var(--text);}
+.h-sub{font-family:var(--font-h);font-weight:700;color:var(--text);}
+.muted{color:var(--muted2);font-size:12px;}
+
+/* ─── BUTTONS ─────────────────────────────────────────────── */
+.btn-accent{
+  background:var(--accent);color:var(--dark);
+  border:none;border-radius:50px;padding:15px 28px;
+  font-family:var(--font-b);font-size:15px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:background .2s,transform .1s;width:100%;
+}
+.btn-accent:active{transform:scale(.98);background:var(--accent2);}
+.btn-dark{
+  background:var(--dark);color:#fff;
+  border:none;border-radius:50px;padding:15px 28px;
+  font-family:var(--font-b);font-size:15px;font-weight:500;
+  cursor:pointer;width:100%;transition:background .2s;
+}
+
+/* ─── CHIP / TAG ──────────────────────────────────────────── */
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,0.10);
+  border-radius:50px;padding:7px 14px;
+  color:#fff;font-size:12px;font-weight:500;
+  cursor:pointer;border:1px solid var(--border);
+  white-space:nowrap;transition:all .2s;flex-shrink:0;
+}
+.chip.active,.chip:hover{background:var(--accent);color:var(--dark);border-color:var(--accent);}
+
+/* ─── SECTION HEADER ──────────────────────────────────────── */
+.sec-hdr{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 22px 10px;
+}
+.sec-hdr h3{font-family:var(--font-h);font-size:17px;font-weight:700;color:#fff;}
+.see-all{font-size:12px;color:var(--accent);font-weight:600;cursor:pointer;}
+
+/* ══════════════════════════════════════════════════════════
+   SCREEN 1: SPLASH
+══════════════════════════════════════════════════════════ */
+#s-splash{background:var(--bg);}
+
+.splash-hero{
+  position:absolute;top:0;left:0;right:0;height:62%;
+  overflow:hidden;
+}
+.splash-hero img{
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(.6);
+}
+.splash-hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:60%;
+  background:linear-gradient(to top, var(--bg) 30%, transparent);
+}
+
+.splash-logo{
+  position:absolute;top:80px;left:0;right:0;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.logo-mark{
+  width:60px;height:60px;
+  background:var(--accent);
+  border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 40px rgba(200,240,0,.35);
+}
+.logo-mark svg{width:34px;height:34px;fill:var(--dark);}
+.splash-logo .brand{
+  font-family:var(--font-h);font-size:30px;font-weight:800;color:#fff;
+  letter-spacing:-0.5px;
+}
+.splash-logo .tagline{font-size:13px;color:var(--muted2);}
+
+.splash-copy{
+  position:absolute;bottom:220px;left:28px;right:28px;
+}
+.splash-copy p{
+  font-family:var(--font-h);font-size:36px;font-weight:800;
+  color:#fff;line-height:1.15;
+}
+.splash-copy p em{color:var(--accent);font-style:normal;}
+
+.splash-actions{
+  position:absolute;bottom:44px;left:24px;right:24px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.splash-link{text-align:center;color:var(--muted);font-size:13px;margin-top:4px;}
+.splash-link span{color:var(--accent);font-weight:600;cursor:pointer;}
+
+/* ══════════════════════════════════════════════════════════
+   SCREEN 2: EXPLORE (HOME)
+══════════════════════════════════════════════════════════ */
+#s-explore{background:var(--bg);}
+
+.exp-header{
+  padding:20px 22px 14px;
+  display:flex;justify-content:space-between;align-items:flex-start;
+}
+.exp-header .greet{font-size:13px;color:var(--muted2);}
+.exp-header h2{font-family:var(--font-h);font-size:24px;font-weight:800;color:#fff;line-height:1.2;}
+.avatar{
+  width:42px;height:42px;border-radius:50%;overflow:hidden;
+  border:2px solid var(--accent);flex-shrink:0;
+}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+
+/* Search bar */
+.search-bar{
+  margin:0 22px 16px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px 16px;
+  display:flex;align-items:center;gap:10px;
+  color:var(--muted2);font-size:14px;
+  cursor:pointer;
+}
+.search-bar svg{width:18px;height:18px;stroke:var(--muted);fill:none;flex-shrink:0;}
+
+/* Chips row */
+.chips-row{
+  display:flex;gap:8px;padding:0 22px 6px;
+  overflow-x:auto;
+}
+.chips-row::-webkit-scrollbar{display:none;}
+
+/* Featured card */
+.feat-card{
+  position:relative;margin:0 22px;
+  border-radius:22px;overflow:hidden;
+  height:210px;cursor:pointer;
+  box-shadow:0 16px 40px rgba(0,0,0,0.3);
+  transition:transform .2s;
+}
+.feat-card:active{transform:scale(.98);}
+.feat-card img{width:100%;height:100%;object-fit:cover;}
+.feat-card-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.75) 40%, transparent);
+  padding:18px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+}
+.feat-card-overlay .badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--accent);color:var(--dark);
+  border-radius:50px;padding:4px 10px;font-size:11px;font-weight:700;
+  width:fit-content;margin-bottom:8px;
+}
+.feat-card-overlay h3{font-family:var(--font-h);font-size:22px;font-weight:800;color:#fff;}
+.feat-card-overlay p{font-size:12px;color:rgba(255,255,255,.7);margin-top:2px;}
+.feat-card-overlay .meta{
+  display:flex;align-items:center;gap:14px;margin-top:8px;
+}
+.feat-card-overlay .meta span{font-size:12px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:4px;}
+.feat-card-overlay .meta svg{width:13px;height:13px;stroke:var(--accent);fill:none;}
+
+/* Destination cards horizontal */
+.dest-row{
+  display:flex;gap:12px;padding:4px 22px;
+  overflow-x:auto;
+}
+.dest-row::-webkit-scrollbar{display:none;}
+.dest-card{
+  position:relative;
+  min-width:130px;height:160px;
+  border-radius:18px;overflow:hidden;
+  cursor:pointer;flex-shrink:0;
+  transition:transform .2s;
+}
+.dest-card:active{transform:scale(.96);}
+.dest-card img{width:100%;height:100%;object-fit:cover;}
+.dest-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,.7) 40%, transparent);
+}
+.dest-card-info{
+  position:absolute;bottom:12px;left:12px;right:12px;z-index:1;
+}
+.dest-card-info h4{font-family:var(--font-h);font-size:15px;font-weight:700;color:#fff;}
+.dest-card-info p{font-size:11px;color:rgba(255,255,255,.65);}
+
+/* Experience cards */
+.exp-cards{
+  display:flex;gap:12px;padding:4px 22px;
+  overflow-x:auto;
+}
+.exp-cards::-webkit-scrollbar{display:none;}
+.exp-mini{
+  min-width:150px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  flex-shrink:0;
+  cursor:pointer;
+  transition:transform .2s;
+}
+.exp-mini:active{transform:scale(.97);}
+.exp-mini img{width:100%;height:90px;object-fit:cover;}
+.exp-mini-body{padding:10px 12px;}
+.exp-mini-body h5{font-size:13px;font-weight:600;color:#fff;margin-bottom:2px;}
+.exp-mini-body p{font-size:11px;color:var(--muted2);}
+
+/* ══════════════════════════════════════════════════════════
+   SCREEN 3: DESTINO DETALHE
+══════════════════════════════════════════════════════════ */
+#s-detail{background:var(--bg);}
+
+.detail-hero{
+  position:relative;height:320px;flex-shrink:0;
+}
+.detail-hero img{width:100%;height:100%;object-fit:cover;}
+.detail-hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:50%;
+  background:linear-gradient(to top, var(--bg), transparent);
+}
+.detail-back{
+  position:absolute;top:60px;left:20px;z-index:10;
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(0,0,0,.4);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:none;
+}
+.detail-back svg{width:20px;height:20px;stroke:#fff;fill:none;}
+.detail-fav{
+  position:absolute;top:60px;right:20px;z-index:10;
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(0,0,0,.4);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+.detail-fav svg{width:20px;height:20px;stroke:#fff;fill:none;}
+
+.detail-body{
+  flex:1;overflow-y:auto;padding:0 22px 100px;
+}
+.detail-body::-webkit-scrollbar{display:none;}
+
+.detail-title-row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  margin-bottom:6px;
+}
+.detail-title-row h2{
+  font-family:var(--font-h);font-size:28px;font-weight:800;color:#fff;
+  flex:1;
+}
+.detail-rating{
+  display:flex;flex-direction:column;align-items:flex-end;
+}
+.rating-num{font-family:var(--font-h);font-size:24px;font-weight:800;color:var(--accent);}
+.rating-stars{font-size:11px;color:var(--muted2);}
+
+.detail-loc{
+  display:flex;align-items:center;gap:5px;color:var(--muted2);
+  font-size:13px;margin-bottom:16px;
+}
+.detail-loc svg{width:14px;height:14px;stroke:var(--accent);fill:none;}
+
+.detail-stats{
+  display:flex;gap:10px;margin-bottom:20px;
+}
+.stat-pill{
+  flex:1;background:rgba(255,255,255,0.06);
+  border:1px solid var(--border);border-radius:14px;
+  padding:12px 8px;text-align:center;
+}
+.stat-pill .sv{font-family:var(--font-h);font-size:16px;font-weight:700;color:#fff;}
+.stat-pill .sl{font-size:10px;color:var(--muted2);margin-top:2px;}
+
+.detail-desc{
+  font-size:14px;color:var(--muted2);line-height:1.65;margin-bottom:20px;
+}
+.detail-desc .more{color:var(--accent);cursor:pointer;}
+
+/* Foto galeria */
+.gallery-row{
+  display:flex;gap:10px;margin-bottom:24px;overflow-x:auto;
+}
+.gallery-row::-webkit-scrollbar{display:none;}
+.gallery-thumb{
+  width:90px;height:70px;border-radius:12px;overflow:hidden;flex-shrink:0;
+  cursor:pointer;transition:transform .2s;
+}
+.gallery-thumb:active{transform:scale(.95);}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover;}
+
+.detail-cta{
+  display:flex;gap:10px;
+}
+.btn-book{
+  flex:1;background:var(--accent);color:var(--dark);
+  border:none;border-radius:50px;padding:16px;
+  font-family:var(--font-b);font-size:15px;font-weight:700;
+  cursor:pointer;transition:background .2s;
+}
+.btn-save{
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(255,255,255,.08);
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+}
+.btn-save svg{width:22px;height:22px;stroke:#fff;fill:none;}
+
+/* ══════════════════════════════════════════════════════════
+   SCREEN 4: MINHA VIAGEM / TRIPS
+══════════════════════════════════════════════════════════ */
+#s-trips{background:var(--bg);}
+
+.trips-header{padding:20px 22px 16px;}
+.trips-header h2{font-family:var(--font-h);font-size:24px;font-weight:800;color:#fff;}
+.trips-header p{font-size:13px;color:var(--muted2);margin-top:3px;}
+
+/* Big trip card */
+.trip-big{
+  margin:0 22px 14px;
+  border-radius:20px;overflow:hidden;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  cursor:pointer;
+}
+.trip-big-img{height:140px;overflow:hidden;position:relative;}
+.trip-big-img img{width:100%;height:100%;object-fit:cover;}
+.trip-big-img .status-badge{
+  position:absolute;top:12px;right:12px;
+  background:var(--accent);color:var(--dark);
+  border-radius:50px;padding:4px 12px;
+  font-size:11px;font-weight:700;
+}
+.trip-big-body{padding:14px 16px;}
+.trip-big-body h3{font-family:var(--font-h);font-size:17px;font-weight:700;color:#fff;margin-bottom:6px;}
+.trip-route-row{
+  display:flex;align-items:center;gap:10px;margin-bottom:10px;
+}
+.iata{font-family:var(--font-h);font-size:26px;font-weight:800;color:#fff;}
+.iata-info{font-size:10px;color:var(--muted2);}
+.arrow-mid{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.arrow-mid svg{width:24px;height:16px;stroke:var(--muted);fill:none;}
+.arrow-mid .dline{width:100%;height:1px;background:var(--border);}
+.trip-meta-row{display:flex;gap:14px;}
+.trip-meta-row span{
+  font-size:11px;color:var(--muted2);
+  display:flex;align-items:center;gap:4px;
+}
+.trip-meta-row svg{width:12px;height:12px;stroke:var(--accent);fill:none;}
+
+/* ══════════════════════════════════════════════════════════
+   SCREEN 5: BOARDING PASS
+══════════════════════════════════════════════════════════ */
+#s-pass{background:var(--bg);}
+
+.pass-appbar{
+  display:flex;align-items:center;padding:20px 22px 10px;gap:14px;
+}
+.pass-appbar h2{font-family:var(--font-h);font-size:18px;font-weight:700;color:#fff;}
+.back-icon{
+  width:36px;height:36px;background:rgba(255,255,255,.08);
+  border:none;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.back-icon svg{width:20px;height:20px;stroke:#fff;fill:none;}
+
+.pass-scroll{flex:1;overflow-y:auto;padding:0 18px 20px;}
+.pass-scroll::-webkit-scrollbar{display:none;}
+
+.pass-card{
+  background:#fff;border-radius:24px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.pass-top{
+  background:var(--bg);padding:20px 22px;
+  display:flex;justify-content:space-between;align-items:flex-start;
+}
+.airline-row{display:flex;align-items:center;gap:10px;}
+.al-icon{font-size:20px;}
+.al-name{font-family:var(--font-h);font-size:14px;font-weight:700;color:#fff;}
+.al-num{font-size:11px;color:var(--muted);}
+.pass-status-block .lbl{font-size:10px;color:var(--muted);text-align:right;}
+.pass-status-block .val{font-size:13px;font-weight:700;color:var(--accent);text-align:right;}
+
+.pass-route-sec{
+  padding:20px 22px 16px;background:#fff;
+  display:flex;align-items:center;gap:10px;
+}
+.p-iata{font-family:var(--font-h);font-size:38px;font-weight:800;color:#0B2420;}
+.p-city{font-size:11px;color:#888;margin-top:1px;}
+.p-time{font-size:11px;color:#555;}
+.p-arrow{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.p-arrow svg{width:26px;height:18px;stroke:#0B3D2E;fill:none;}
+.p-arrow .pline{width:100%;height:1px;background:#ddd;}
+
+.pass-notch-divider{
+  display:flex;align-items:center;background:#fff;
+}
+.notch-circle{
+  width:26px;height:26px;border-radius:50%;background:var(--bg);
+}
+.notch-dash{flex:1;border-top:2px dashed #ddd;margin:0 3px;}
+
+.pass-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:14px;padding:18px 22px;background:#fff;
+}
+.pg-item .pg-l{font-size:10px;color:#999;margin-bottom:3px;}
+.pg-item .pg-v{font-family:var(--font-h);font-size:14px;font-weight:700;color:#0B2420;}
+
+.pass-barcode{
+  background:#fff;padding:20px 22px;
+  display:flex;justify-content:center;
+}
+.barcode-img{width:100%;height:72px;}
+
+.pass-actions{
+  padding:16px 18px 36px;
+  display:flex;gap:10px;
+}
+.btn-dl{
+  flex:1;background:var(--accent);color:var(--dark);
+  border:none;border-radius:50px;padding:15px;
+  font-family:var(--font-b);font-size:14px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+}
+.btn-sh{
+  flex:1;background:var(--bg);color:#fff;
+  border:none;border-radius:50px;padding:15px;
+  font-family:var(--font-b);font-size:14px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SCREEN 6: PERFIL
+══════════════════════════════════════════════════════════ */
+#s-profile{background:var(--bg);}
+.profile-hero{
+  position:relative;height:200px;overflow:hidden;flex-shrink:0;
+}
+.profile-hero img{width:100%;height:100%;object-fit:cover;filter:brightness(.5);}
+.profile-hero::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:60%;
+  background:linear-gradient(to top, var(--bg), transparent);
+}
+.profile-info{
+  position:relative;z-index:2;
+  margin-top:-60px;
+  padding:0 22px 0;
+  display:flex;align-items:flex-end;gap:14px;
+  margin-bottom:20px;
+}
+.profile-avatar{
+  width:80px;height:80px;border-radius:24px;overflow:hidden;
+  border:3px solid var(--bg);flex-shrink:0;
+}
+.profile-avatar img{width:100%;height:100%;object-fit:cover;}
+.profile-name{padding-bottom:4px;}
+.profile-name h3{font-family:var(--font-h);font-size:20px;font-weight:800;color:#fff;}
+.profile-name p{font-size:12px;color:var(--muted2);}
+
+.profile-stats{
+  display:flex;gap:10px;margin:0 22px 22px;
+}
+.ps-item{
+  flex:1;background:rgba(255,255,255,.06);
+  border:1px solid var(--border);border-radius:16px;
+  padding:14px 10px;text-align:center;
+}
+.ps-item .pv{font-family:var(--font-h);font-size:22px;font-weight:800;color:#fff;}
+.ps-item .pl{font-size:10px;color:var(--muted2);margin-top:2px;}
+
+.profile-menu{margin:0 22px;}
+.menu-item{
+  display:flex;align-items:center;gap:14px;
+  padding:16px 0;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+}
+.menu-icon{
+  width:40px;height:40px;border-radius:12px;
+  background:rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.menu-icon svg{width:18px;height:18px;stroke:var(--accent);fill:none;}
+.menu-label{flex:1;color:#fff;font-size:14px;font-weight:500;}
+.menu-arrow svg{width:16px;height:16px;stroke:var(--muted);fill:none;}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.screen.active > *{animation:fadeUp .4s ease both;}
+.screen.active > *:nth-child(2){animation-delay:.06s;}
+.screen.active > *:nth-child(3){animation-delay:.10s;}
+.screen.active > *:nth-child(4){animation-delay:.14s;}
+.screen.active > *:nth-child(5){animation-delay:.18s;}
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- ══ STATUS BAR (partilhada) ══ -->
+  <div class="sb" id="status-bar">
+    <span>9:41</span>
+    <div class="notch"></div>
+    <div class="sb-icons">
+      <svg viewBox="0 0 24 24"><rect x="2" y="14" width="3" height="8" rx="1"/><rect x="8" y="10" width="3" height="12" rx="1"/><rect x="14" y="6" width="3" height="16" rx="1"/><rect x="20" y="2" width="3" height="20" rx="1"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M1 6s4.5-4 11-4 11 4 11 4"/><path d="M5 10s3-2.5 7-2.5 7 2.5 7 2.5"/><circle cx="12" cy="15" r="2"/></svg>
+      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="11" rx="2"/><path d="M22 11v3"/></svg>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       TELA 1 — SPLASH
+  ══════════════════════════════ -->
+  <div class="screen active" id="s-splash">
+    <div class="splash-hero">
+      <!-- Baía de Luanda / Cabo Ledo (Angola) -->
+      <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=800&q=85" alt="Angola"/>
+    </div>
+
+    <div class="splash-logo">
+      <div class="logo-mark">
+        <!-- ícone de sol/estrela angolana estilizado -->
+        <svg viewBox="0 0 34 34"><path d="M17 2L20.5 12.5H31L22.5 19L26 29.5L17 23L8 29.5L11.5 19L3 12.5H13.5L17 2Z"/></svg>
+      </div>
+      <div class="brand">Kamba</div>
+      <div class="tagline">Descobre Angola contigo</div>
+    </div>
+
+    <div class="splash-copy">
+      <p>Explora as<br>maravilhas de<br><em>Angola</em> 🌍</p>
+    </div>
+
+    <div class="splash-actions">
+      <button class="btn-accent" onclick="goTo('s-explore')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Começar a Explorar
+      </button>
+      <button class="btn-dark" onclick="goTo('s-explore')">Já tenho conta</button>
+      <p class="splash-link">Não tens conta? <span onclick="goTo('s-explore')">Regista-te</span></p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       TELA 2 — EXPLORAR (HOME)
+  ══════════════════════════════ -->
+  <div class="screen" id="s-explore">
+    <div class="exp-header">
+      <div>
+        <div class="greet">Bom dia, Evandre 👋</div>
+        <h2>Para onde<br>vais hoje?</h2>
+      </div>
+      <div class="avatar">
+        <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&q=80" alt="avatar"/>
+      </div>
+    </div>
+
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Pesquisa destino, hotel...
+    </div>
+
+    <div class="chips-row">
+      <div class="chip active">🗺️ Tudo</div>
+      <div class="chip">🏖️ Praias</div>
+      <div class="chip">🌿 Natureza</div>
+      <div class="chip">🏙️ Cidades</div>
+      <div class="chip">🎭 Cultura</div>
+    </div>
+
+    <div class="scroll">
+      <!-- Featured -->
+      <div class="sec-hdr"><h3>Destaque</h3><span class="see-all">Ver tudo</span></div>
+      <div class="feat-card" onclick="goTo('s-detail')">
+        <img src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=800&q=85" alt="Cabo Ledo"/>
+        <div class="feat-card-overlay">
+          <div class="badge">⭐ Top Escolha</div>
+          <h3>Cabo Ledo</h3>
+          <p>Bengo · 65 km de Luanda</p>
+          <div class="meta">
+            <span>
+              <svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              Praia Privada
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              4.9 · 312 avaliações
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Destinos -->
+      <div class="sec-hdr"><h3>Destinos Populares</h3><span class="see-all">Ver tudo</span></div>
+      <div class="dest-row">
+        <div class="dest-card" onclick="goTo('s-detail')">
+          <img src="https://images.unsplash.com/photo-1580974928064-f0aeef70895a?w=400&q=80" alt="Luanda"/>
+          <div class="dest-card-info"><h4>Luanda</h4><p>Capital · 42 lugares</p></div>
+        </div>
+        <div class="dest-card" onclick="goTo('s-detail')">
+          <img src="https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=400&q=80" alt="Namibe"/>
+          <div class="dest-card-info"><h4>Namibe</h4><p>Deserto · 18 lugares</p></div>
+        </div>
+        <div class="dest-card" onclick="goTo('s-detail')">
+          <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&q=80" alt="Huíla"/>
+          <div class="dest-card-info"><h4>Huíla</h4><p>Serra · 25 lugares</p></div>
+        </div>
+        <div class="dest-card" onclick="goTo('s-detail')">
+          <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&q=80" alt="Benguela"/>
+          <div class="dest-card-info"><h4>Benguela</h4><p>Praias · 33 lugares</p></div>
+        </div>
+      </div>
+
+      <!-- Experiências -->
+      <div class="sec-hdr"><h3>Experiências</h3><span class="see-all">Ver tudo</span></div>
+      <div class="exp-cards">
+        <div class="exp-mini" onclick="goTo('s-detail')">
+          <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=300&q=80" alt="Safari"/>
+          <div class="exp-mini-body"><h5>Safari Quiçama</h5><p>2 dias · Desde 45.000 Kz</p></div>
+        </div>
+        <div class="exp-mini" onclick="goTo('s-detail')">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&q=80" alt="Praia"/>
+          <div class="exp-mini-body"><h5>Praias do Sul</h5><p>3 dias · Desde 38.000 Kz</p></div>
+        </div>
+        <div class="exp-mini" onclick="goTo('s-detail')">
+          <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=300&q=80" alt="Montanha"/>
+          <div class="exp-mini-body"><h5>Serra da Leba</h5><p>1 dia · Desde 12.000 Kz</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bnav">
+      <div class="bnav-item active" onclick="goTo('s-explore')">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Explorar
+      </div>
+      <div class="bnav-item" onclick="goTo('s-detail')">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Guardados
+      </div>
+      <div class="bnav-item" onclick="goTo('s-trips')">
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
+        Viagens
+      </div>
+      <div class="bnav-item" onclick="goTo('s-profile')">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Perfil
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       TELA 3 — DETALHE DESTINO
+  ══════════════════════════════ -->
+  <div class="screen" id="s-detail">
+    <div class="detail-hero">
+      <img src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=800&q=85" alt="Cabo Ledo"/>
+      <button class="detail-back" onclick="goBack()">
+        <svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <div class="detail-fav">
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="detail-title-row">
+        <h2>Cabo Ledo</h2>
+        <div class="detail-rating">
+          <div class="rating-num">4.9</div>
+          <div class="rating-stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="detail-loc">
+        <svg viewBox="0 0 24 24" stroke-width="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Bengo, Angola · 65 km de Luanda
+      </div>
+      <div class="detail-stats">
+        <div class="stat-pill"><div class="sv">3D</div><div class="sl">Duração</div></div>
+        <div class="stat-pill"><div class="sv">28°C</div><div class="sl">Temperatura</div></div>
+        <div class="stat-pill"><div class="sv">AOA</div><div class="sl">Moeda</div></div>
+        <div class="stat-pill"><div class="sv">PT</div><div class="sl">Idioma</div></div>
+      </div>
+      <p class="detail-desc">
+        Cabo Ledo é uma das praias mais espetaculares de Angola, com dunas douradas que mergulham no Atlântico. Conhecida pelo surf de classe mundial, pesca tradicional e pôr do sol inesquecível. Uma experiência autêntica da costa angolana. <span class="more">Ver mais...</span>
+      </p>
+
+      <!-- Galeria -->
+      <div class="gallery-row">
+        <div class="gallery-thumb"><img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=200&q=80" alt=""/></div>
+        <div class="gallery-thumb"><img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=200&q=80" alt=""/></div>
+        <div class="gallery-thumb"><img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?w=200&q=80" alt=""/></div>
+        <div class="gallery-thumb"><img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=200&q=80" alt=""/></div>
+      </div>
+
+      <div class="detail-cta">
+        <button class="btn-book" onclick="goTo('s-trips')">Reservar Agora</button>
+        <div class="btn-save"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
+      </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bnav">
+      <div class="bnav-item" onclick="goTo('s-explore')">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Explorar
+      </div>
+      <div class="bnav-item active">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Guardados
+      </div>
+      <div class="bnav-item" onclick="goTo('s-trips')">
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
+        Viagens
+      </div>
+      <div class="bnav-item" onclick="goTo('s-profile')">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Perfil
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       TELA 4 — MINHAS VIAGENS
+  ══════════════════════════════ -->
+  <div class="screen" id="s-trips">
+    <div class="trips-header">
+      <h2>Minhas Viagens</h2>
+      <p>Próximas e passadas</p>
+    </div>
+
+    <div class="scroll">
+      <!-- Seção próxima viagem -->
+      <div class="sec-hdr" style="padding-top:4px"><h3>Próxima Viagem</h3></div>
+
+      <div class="trip-big" onclick="goTo('s-pass')">
+        <div class="trip-big-img">
+          <img src="https://images.unsplash.com/photo-1580974928064-f0aeef70895a?w=600&q=80" alt="Luanda"/>
+          <div class="status-badge">Confirmado ✓</div>
+        </div>
+        <div class="trip-big-body">
+          <h3>Luanda → Lubango</h3>
+          <div class="trip-route-row">
+            <div>
+              <div class="iata">LAD</div>
+              <div class="iata-info">Luanda, AO</div>
+              <div class="iata-info" style="color:#fff;font-size:12px">07:30 AM</div>
+            </div>
+            <div class="arrow-mid">
+              <svg viewBox="0 0 24 14" fill="none"><path d="M2 7h20M16 2l6 5-6 5" stroke="#7AAF92" stroke-width="1.5"/></svg>
+              <div class="dline"></div>
+            </div>
+            <div style="text-align:right">
+              <div class="iata">SDD</div>
+              <div class="iata-info">Lubango, AO</div>
+              <div class="iata-info" style="color:#fff;font-size:12px">09:10 AM</div>
+            </div>
+          </div>
+          <div class="trip-meta-row">
+            <span>
+              <svg viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              15 Mai 2025
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              1 Adulto · Seat 4A
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8"/></svg>
+              10 kg
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Viagens passadas -->
+      <div class="sec-hdr"><h3>Histórico</h3><span class="see-all">Ver tudo</span></div>
+
+      <div class="trip-big" style="opacity:.7">
+        <div class="trip-big-img">
+          <img src="https://images.unsplash.com/photo-1559827291-72ee739d0d9a?w=600&q=80" alt="Benguela"/>
+          <div class="status-badge" style="background:var(--muted);color:#fff">Concluído</div>
+        </div>
+        <div class="trip-big-body">
+          <h3>Luanda → Benguela</h3>
+          <div class="trip-route-row">
+            <div><div class="iata">LAD</div><div class="iata-info">08:00 AM</div></div>
+            <div class="arrow-mid">
+              <svg viewBox="0 0 24 14" fill="none"><path d="M2 7h20M16 2l6 5-6 5" stroke="#7AAF92" stroke-width="1.5"/></svg>
+              <div class="dline"></div>
+            </div>
+            <div style="text-align:right"><div class="iata">BUG</div><div class="iata-info">09:30 AM</div></div>
+          </div>
+          <div class="trip-meta-row">
+            <span>
+              <svg viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              12 Nov 2024
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bnav">
+      <div class="bnav-item" onclick="goTo('s-explore')">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Explorar
+      </div>
+      <div class="bnav-item" onclick="goTo('s-detail')">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Guardados
+      </div>
+      <div class="bnav-item active">
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
+        Viagens
+      </div>
+      <div class="bnav-item" onclick="goTo('s-profile')">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Perfil
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       TELA 5 — BOARDING PASS
+  ══════════════════════════════ -->
+  <div class="screen" id="s-pass">
+    <div class="pass-appbar">
+      <button class="back-icon" onclick="goBack()">
+        <svg viewBox="0 0 24 24" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <h2>Cartão de Embarque</h2>
+    </div>
+
+    <div class="pass-scroll">
+      <div class="pass-card">
+        <!-- Header cia aérea -->
+        <div class="pass-top">
+          <div class="airline-row">
+            <div class="al-icon">✈️</div>
+            <div>
+              <div class="al-name">TAAG Angola Airlines</div>
+              <div class="al-num">Bilhete: 2888100</div>
+            </div>
+          </div>
+          <div class="pass-status-block">
+            <div class="lbl">Estado</div>
+            <div class="val">Confirmado</div>
+          </div>
+        </div>
+
+        <!-- Rota -->
+        <div class="pass-route-sec">
+          <div>
+            <div class="p-iata">LAD</div>
+            <div class="p-city">Luanda, AO</div>
+            <div class="p-time">07:30 AM</div>
+          </div>
+          <div class="p-arrow">
+            <svg viewBox="0 0 24 14" fill="none"><path d="M2 7h20M16 2l6 5-6 5" stroke="#0B3D2E" stroke-width="1.5"/><circle cx="5" cy="7" r="1.5" fill="#0B3D2E"/></svg>
+            <div class="pline"></div>
+          </div>
+          <div style="text-align:right">
+            <div class="p-iata">SDD</div>
+            <div class="p-city">Lubango, AO</div>
+            <div class="p-time">09:10 AM</div>
+          </div>
+        </div>
+
+        <!-- Separador dentado -->
+        <div class="pass-notch-divider">
+          <div class="notch-circle"></div>
+          <div class="notch-dash"></div>
+          <div class="notch-circle"></div>
+        </div>
+
+        <!-- Grid detalhes -->
+        <div class="pass-grid">
+          <div class="pg-item"><div class="pg-l">Nome</div><div class="pg-v">Evandre</div></div>
+          <div class="pg-item" style="text-align:right"><div class="pg-l">Nº Bilhete</div><div class="pg-v">AO1231</div></div>
+          <div class="pg-item"><div class="pg-l">Passageiros</div><div class="pg-v">1 Adulto</div></div>
+          <div class="pg-item" style="text-align:right"><div class="pg-l">Assento</div><div class="pg-v">4A</div></div>
+          <div class="pg-item"><div class="pg-l">Classe</div><div class="pg-v">Económica</div></div>
+          <div class="pg-item" style="text-align:right"><div class="pg-l">Bagagem</div><div class="pg-v">10 kg</div></div>
+        </div>
+
+        <!-- Separador 2 -->
+        <div class="pass-notch-divider" style="background:#fff">
+          <div class="notch-circle"></div>
+          <div class="notch-dash"></div>
+          <div class="notch-circle"></div>
+        </div>
+
+        <!-- Barcode SVG -->
+        <div class="pass-barcode">
+          <svg class="barcode-img" viewBox="0 0 320 72" xmlns="http://www.w3.org/2000/svg">
+            <g fill="#111">
+              <rect x="0"   width="3"  height="72"/><rect x="5"   width="2"  height="72"/>
+              <rect x="9"   width="4"  height="72"/><rect x="15"  width="1"  height="72"/>
+              <rect x="18"  width="3"  height="72"/><rect x="23"  width="2"  height="72"/>
+              <rect x="27"  width="5"  height="72"/><rect x="34"  width="1"  height="72"/>
+              <rect x="37"  width="3"  height="72"/><rect x="42"  width="2"  height="72"/>
+              <rect x="46"  width="4"  height="72"/><rect x="52"  width="1"  height="72"/>
+              <rect x="55"  width="3"  height="72"/><rect x="60"  width="2"  height="72"/>
+              <rect x="64"  width="5"  height="72"/><rect x="71"  width="1"  height="72"/>
+              <rect x="74"  width="3"  height="72"/><rect x="79"  width="2"  height="72"/>
+              <rect x="83"  width="4"  height="72"/><rect x="89"  width="1"  height="72"/>
+              <rect x="92"  width="3"  height="72"/><rect x="97"  width="2"  height="72"/>
+              <rect x="101" width="5"  height="72"/><rect x="108" width="1"  height="72"/>
+              <rect x="111" width="3"  height="72"/><rect x="116" width="2"  height="72"/>
+              <rect x="120" width="4"  height="72"/><rect x="126" width="1"  height="72"/>
+              <rect x="129" width="3"  height="72"/><rect x="134" width="2"  height="72"/>
+              <rect x="138" width="5"  height="72"/><rect x="145" width="1"  height="72"/>
+              <rect x="148" width="3"  height="72"/><rect x="153" width="2"  height="72"/>
+              <rect x="157" width="4"  height="72"/><rect x="163" width="1"  height="72"/>
+              <rect x="166" width="3"  height="72"/><rect x="171" width="2"  height="72"/>
+              <rect x="175" width="5"  height="72"/><rect x="182" width="1"  height="72"/>
+              <rect x="185" width="3"  height="72"/><rect x="190" width="2"  height="72"/>
+              <rect x="194" width="4"  height="72"/><rect x="200" width="1"  height="72"/>
+              <rect x="203" width="3"  height="72"/><rect x="208" width="2"  height="72"/>
+              <rect x="212" width="5"  height="72"/><rect x="219" width="1"  height="72"/>
+              <rect x="222" width="3"  height="72"/><rect x="227" width="2"  height="72"/>
+              <rect x="231" width="4"  height="72"/><rect x="237" width="1"  height="72"/>
+              <rect x="240" width="3"  height="72"/><rect x="245" width="2"  height="72"/>
+              <rect x="249" width="5"  height="72"/><rect x="256" width="1"  height="72"/>
+              <rect x="259" width="3"  height="72"/><rect x="264" width="2"  height="72"/>
+              <rect x="268" width="4"  height="72"/><rect x="274" width="1"  height="72"/>
+              <rect x="277" width="3"  height="72"/><rect x="282" width="2"  height="72"/>
+              <rect x="286" width="5"  height="72"/><rect x="293" width="1"  height="72"/>
+              <rect x="296" width="3"  height="72"/><rect x="301" width="2"  height="72"/>
+              <rect x="305" width="4"  height="72"/><rect x="311" width="1"  height="72"/>
+              <rect x="314" width="3"  height="72"/><rect x="319" width="1"  height="72"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="pass-actions">
+      <button class="btn-dl">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Descarregar
+      </button>
+      <button class="btn-sh">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        Partilhar
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════
+       TELA 6 — PERFIL
+  ══════════════════════════════ -->
+  <div class="screen" id="s-profile">
+    <div class="profile-hero">
+      <img src="https://images.unsplash.com/photo-1547970810-dc1eac37d174?w=800&q=80" alt="Angola"/>
+    </div>
+
+    <div class="profile-info">
+      <div class="profile-avatar">
+        <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=100&q=80" alt="avatar"/>
+      </div>
+      <div class="profile-name">
+        <h3>Evandre T.</h3>
+        <p>Membro desde 2024 · Luanda, AO</p>
+      </div>
+    </div>
+
+    <div class="profile-stats">
+      <div class="ps-item"><div class="pv">12</div><div class="pl">Viagens</div></div>
+      <div class="ps-item"><div class="pv">7</div><div class="pl">Países</div></div>
+      <div class="ps-item"><div class="pv">24k</div><div class="pl">Kambas</div></div>
+    </div>
+
+    <div class="scroll" style="padding-bottom:100px">
+      <div class="profile-menu">
+        <div class="menu-item">
+          <div class="menu-icon"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <div class="menu-label">Editar Perfil</div>
+          <div class="menu-arrow"><svg viewBox="0 0 24 24" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="menu-item" onclick="goTo('s-trips')">
+          <div class="menu-icon"><svg viewBox="0 0 24 24" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8"/></svg></div>
+          <div class="menu-label">Minhas Viagens</div>
+          <div class="menu-arrow"><svg viewBox="0 0 24 24" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-icon"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div>
+          <div class="menu-label">Lugares Guardados</div>
+          <div class="menu-arrow"><svg viewBox="0 0 24 24" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-icon"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+          <div class="menu-label">Notificações</div>
+          <div class="menu-arrow"><svg viewBox="0 0 24 24" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-icon"><svg viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+          <div class="menu-label">Suporte</div>
+          <div class="menu-arrow"><svg viewBox="0 0 24 24" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+        <div class="menu-item" onclick="goTo('s-splash')">
+          <div class="menu-icon"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
+          <div class="menu-label" style="color:#ff6b6b">Terminar Sessão</div>
+          <div class="menu-arrow"><svg viewBox="0 0 24 24" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bnav">
+      <div class="bnav-item" onclick="goTo('s-explore')">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Explorar
+      </div>
+      <div class="bnav-item" onclick="goTo('s-detail')">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        Guardados
+      </div>
+      <div class="bnav-item" onclick="goTo('s-trips')">
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
+        Viagens
+      </div>
+      <div class="bnav-item active">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Perfil
+      </div>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+  // ── Histórico de navegação para suportar "voltar"
+  const history = ['s-splash'];
+  let current = 's-splash';
+
+  function goTo(id) {
+    if (id === current) return;
+
+    const prev = document.getElementById(current);
+    const next = document.getElementById(id);
+
+    prev.classList.remove('active');
+    prev.classList.add('out-left');
+    setTimeout(() => prev.classList.remove('out-left'), 350);
+
+    next.classList.add('active');
+
+    history.push(id);
+    current = id;
+
+    // Oculta status bar na tela de boarding pass (visual limpo)
+    document.getElementById('status-bar').style.opacity =
+      (id === 's-pass') ? '0' : '1';
+  }
+
+  function goBack() {
+    if (history.length > 1) {
+      history.pop();
+      const prev = history[history.length - 1];
+      const curr = document.getElementById(current);
+      const target = document.getElementById(prev);
+
+      curr.classList.remove('active');
+      target.classList.add('active');
+      current = prev;
+    }
+  }
+</script>
+</body>
+</html>
